@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Master Admin",
+    "email": "admin@ecommerce.com",
+    "password": "$2a$12$NAwFboOyFx1o6yUSKbzvEOLJ57IffojpgsdfUtIJj8d5m9IV/ljYG",
+    "avatar": {
+      "public_id": "default-avatar_qtozys",
+      "url": "https://res.cloudinary.com/dgsgjld06/image/upload/v1682190483/default-avatar_qtozys.png"
+    },
+    "role": "admin",
+    "createdAt": 1682190935
+  },
+  {
+    "name": "Sample User",
+    "email": "user@ecommerce.com",
+    "password": "$2a$12$NAwFboOyFx1o6yUSKbzvEOLJ57IffojpgsdfUtIJj8d5m9IV/ljYG",
+    "avatar": {
+      "public_id": "default-avatar_qtozys",
+      "url": "https://res.cloudinary.com/dgsgjld06/image/upload/v1682190483/default-avatar_qtozys.png"
+    },
+    "role": "user",
+    "createdAt": 1682190935
+  }
+]
