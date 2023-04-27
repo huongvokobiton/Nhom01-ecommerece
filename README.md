@@ -10,7 +10,7 @@
 <!-- tocstop -->
 
 # 1. Setup development
-* Use `node` v14.20.1 for local development
+* Use `node` => v14.20.1 for local development
 
 # 2. Launch in local 
 ## 2.1. Backend

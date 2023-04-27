@@ -23,7 +23,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(fileUpload());
-app.use(morgan("tiny"));
+//app.use(morgan("tiny"));
 
 // Allow Cross-Origin requests
 app.use(cors());

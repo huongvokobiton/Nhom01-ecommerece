@@ -10,13 +10,15 @@ const {
   createProductReview,
   getProductReviews,
   deleteReview,
+  getProductsPromoted
 } = require("../controllers/product.controller");
 
 const { isAuthenticatedUser, authorizeRoles } = require("../middlewares/auth.middleware");
 const asyncErrorMiddleware = require("../middlewares/error.middleware");
 
-router.route("/products").get(asyncErrorMiddleware(getProducts));
-//router.route("/product/promote").get(asyncErrorMiddleware(getProductsPromoted));
+router.route("/products").get(isAuthenticatedUser,asyncErrorMiddleware(getProducts));
+
+router.route("/product/promoted").get(isAuthenticatedUser,asyncErrorMiddleware(getProductsPromoted));
 
 router.route("/admin/products").get(asyncErrorMiddleware(getAdminProducts));
 router.route("/product/:id").get(asyncErrorMiddleware(getSingleProduct));

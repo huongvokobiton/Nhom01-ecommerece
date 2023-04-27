@@ -43,6 +43,7 @@ exports.newOrder = async (req, res, next) => {
     success: true,
     order,
   });
+
 };
 
 // Get single order   =>   /api/v1/order/:id
@@ -116,7 +117,30 @@ async function updateStock(id, quantity) {
   product.stock = product.stock - quantity;
 
   await product.save({ validateBeforeSave: false });
+
+  
 }
+
+
+// //HoangT - Add function to push relation Neo4J
+// const neo4j = require('neo4j-driver');
+
+// async function createRelationship(session, label1, property1, label2, property2, quantity) {
+//   const query = `
+//     MATCH (a{${label1}:${property1}}), (b{${label2}:${property2}})
+//     MERGE (a)-[:PURCHASED {quantity: ${quantity}}]->(b)
+//     RETURN a, b
+//   `;
+
+//   const result = await session.run(query, {label1,property1, label2,property2, quantity});
+//   console.log('Query la : ' + query);
+
+//   return result.records.map(record => ({
+//     source: record.get('a').properties,
+//     target: record.get('b').properties
+//   }));
+// }
+// //HoangT - END
 
 // GET MONTHLY INCOME
 exports.getMonthlyIncome = async (req, res, next) => {

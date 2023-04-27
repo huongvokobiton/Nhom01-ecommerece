@@ -2,6 +2,9 @@ import {
     ALL_PRODUCTS_REQUEST,
     ALL_PRODUCTS_SUCCESS,
     ALL_PRODUCTS_FAIL,
+    ALL_PRODUCT_PROMOTED_REQUEST,
+    ALL_PRODUCT_PROMOTED_SUCCESS,
+    ALL_PRODUCT_PROMOTED_FAIL,
     ADMIN_PRODUCTS_REQUEST,
     ADMIN_PRODUCTS_SUCCESS,
     ADMIN_PRODUCTS_FAIL,
@@ -35,13 +38,15 @@ import {
 
 } from '../constants/productConstants'
 
-export const productsReducer = (state = { products: [] }, action) => {
+export const productsReducer = (state = { products: [], promotedProducts: [] }, action) => {
     switch (action.type) {
         case ALL_PRODUCTS_REQUEST:
         case ADMIN_PRODUCTS_REQUEST:
+        case ALL_PRODUCT_PROMOTED_REQUEST:
             return {
                 loading: true,
-                products: []
+                products: [],
+                promotedProducts: []
             }
 
         case ALL_PRODUCTS_SUCCESS:
@@ -52,7 +57,15 @@ export const productsReducer = (state = { products: [] }, action) => {
                 resPerPage: action.payload.resPerPage,
                 filteredProductsCount: action.payload.filteredProductsCount
             }
-
+        case ALL_PRODUCT_PROMOTED_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                promotedProducts: action.payload.products,
+                productsCount: action.payload.productsCount,
+                resPerPage: action.payload.resPerPage,
+                filteredProductsCount: action.payload.filteredProductsCount
+            }
         case ADMIN_PRODUCTS_SUCCESS:
             return {
                 loading: false,
@@ -61,6 +74,7 @@ export const productsReducer = (state = { products: [] }, action) => {
 
         case ALL_PRODUCTS_FAIL:
         case ADMIN_PRODUCTS_FAIL:
+        case ALL_PRODUCT_PROMOTED_FAIL:
             return {
                 loading: false,
                 error: action.payload

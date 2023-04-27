@@ -4,6 +4,8 @@ const ErrorHandler = require("../utils/appError.util");
 const APIFeatures = require("../utils/apiFeatures.util");
 const cloudinary = require("cloudinary");
 
+const { getPromotedProducts } = require("../databases/neo4j.database");
+
 // Create new product   =>   /api/v1/admin/product/new
 exports.newProduct = async (req, res, next) => {
   let images = [];
@@ -37,7 +39,7 @@ exports.newProduct = async (req, res, next) => {
   });
 };
 
-// Get all products   =>   /api/v1/products?keyword=apple
+// Get all products   =>   /api/v1/product
 exports.getProducts = async (req, res, next) => {
   const resPerPage = 12;
   const productsCount = await Product.countDocuments();
@@ -51,7 +53,7 @@ exports.getProducts = async (req, res, next) => {
 
   apiFeatures.pagination(resPerPage);
   products = await apiFeatures.query;
-
+  //console.log('ID LA ' ,products);
   res.status(200).json({
     success: true,
     productsCount,
@@ -61,28 +63,57 @@ exports.getProducts = async (req, res, next) => {
   });
 };
 
-// exports.getProductsPromoted = async (req, res, next) => {
-//   const resPerPage = 4;
-//   const productsCount = await Product.countDocuments();
+// Get all promoted products   =>   /api/v1/product/promoted
+exports.getProductsPromoted = async (req, res, next) => {
+  const resPerPage = 8;
+  const productsCount = await Product.countDocuments();
 
-//   const apiFeatures = new APIFeatures(Product.find(), req.query)
-//     .search()
-//     .filter();
+  //console.log('ID la ',req.user.id)
 
-//   let products = await apiFeatures.query;
-//   let filteredProductsCount = products.length;
+  let promotedProductName = [];
+  try {
+    promotedProductName = await getPromotedProducts(
+      req.user.id,
+      '644453f19437263ab821045e'
+    );
+    
+    console.log('Connected to Neo4J Database successfully')
+    //console.log('List Product De Xuat' , promotedProductName)
 
-//   apiFeatures.pagination(resPerPage);
-//   products = await apiFeatures.query;
+    if (! promotedProductName && promotedProductName?.length === 0) {
+      res.status(200).json({
+        success: true,
+        productsCount: 0,
+        resPerPage: resPerPage,
+        filteredProductsCount: 0,
+        products: [],
+      });
+      //console.log(promotedProductName)
+      return
+    }
 
-//   res.status(200).json({
-//     success: true,
-//     productsCount,
-//     resPerPage,
-//     filteredProductsCount,
-//     products,
-//   });
-// };
+    const apiFeatures = new APIFeatures(Product.find(), { ...req.query, _id: promotedProductName }) //HoangT Edit name => _id
+      .search()
+      .filter();
+
+    let products = await apiFeatures.query;
+    let filteredProductsCount = products.length;
+
+    apiFeatures.pagination(resPerPage);
+    products = await apiFeatures.query;
+
+    res.status(200).json({
+      success: true,
+      productsCount,
+      resPerPage,
+      filteredProductsCount,
+      products,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500)
+  }
+};
 
 // Get all products (Admin)  =>   /api/v1/admin/products
 exports.getAdminProducts = async (req, res, next) => {

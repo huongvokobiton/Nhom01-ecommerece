@@ -4,6 +4,9 @@ import {
     ALL_PRODUCTS_REQUEST,
     ALL_PRODUCTS_SUCCESS,
     ALL_PRODUCTS_FAIL,
+    ALL_PRODUCT_PROMOTED_REQUEST,
+    ALL_PRODUCT_PROMOTED_FAIL,
+    ALL_PRODUCT_PROMOTED_SUCCESS,
     ADMIN_PRODUCTS_REQUEST,
     ADMIN_PRODUCTS_SUCCESS,
     ADMIN_PRODUCTS_FAIL,
@@ -53,6 +56,32 @@ export const getProducts = (keyword = '', currentPage = 1, price, category, rati
     } catch (error) {
         dispatch({
             type: ALL_PRODUCTS_FAIL,
+            payload: error.response.data.message
+        })
+    }
+}
+
+export const getProductPromoted = (keyword = '', currentPage = 1, price, category, rating = 0) => async (dispatch) => {
+    try {
+
+        dispatch({ type: ALL_PRODUCT_PROMOTED_REQUEST })
+
+        let link = `/api/v1/product/promoted?keyword=${keyword}&page=${currentPage}&price[lte]=${price[1]}&price[gte]=${price[0]}&ratings[gte]=${rating}`
+
+        if (category) {
+            link = `/api/v1/product/promoted?keyword=${keyword}&page=${currentPage}&price[lte]=${price[1]}&price[gte]=${price[0]}&category=${category}&ratings[gte]=${rating}`
+        }
+
+        const { data } = await axios.get(link)
+
+        dispatch({
+            type: ALL_PRODUCT_PROMOTED_SUCCESS,
+            payload: data
+        })
+
+    } catch (error) {
+        dispatch({
+            type: ALL_PRODUCT_PROMOTED_FAIL,
             payload: error.response.data.message
         })
     }

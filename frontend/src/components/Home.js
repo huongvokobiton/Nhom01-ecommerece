@@ -9,7 +9,7 @@ import Loader from "./layout/Loader";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
-import { getProducts } from "../actions/productActions";
+import { getProductPromoted, getProducts } from "../actions/productActions";
 
 import Sliderr from "../components/layout/Slider";
 import { Menu, Slider, notification } from "antd";
@@ -46,6 +46,7 @@ const Home = ({ match }) => {
     productsCount,
     resPerPage,
     filteredProductsCount,
+    promotedProducts = []
   } = useSelector((state) => state.products);
 
   const keyword = match.params.keyword;
@@ -59,6 +60,10 @@ const Home = ({ match }) => {
 
     dispatch(getProducts(keyword, currentPage, price, category, rating));
   }, [dispatch, alert, error, keyword, currentPage, price, category, rating]);
+
+  useEffect(() => {
+    dispatch(getProductPromoted(keyword, currentPage, price, category, rating));
+  }, [keyword, currentPage, price, category, rating, dispatch])
 
   function setCurrentPageNo(pageNumber) {
     setCurrentPage(pageNumber);
@@ -101,7 +106,7 @@ const Home = ({ match }) => {
 
         <h1 id="products_heading" className="container container-fluid">
           <div className="row">
-            {products?.slice(0, 4).map((product) => (
+            {promotedProducts?.map((product) => (
               <Product key={product._id} product={product} col={3} />
             ))}
           </div>
